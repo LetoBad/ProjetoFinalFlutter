@@ -1,4 +1,6 @@
 import 'package:fitapp/Alimentos.dart';
+import 'package:fitapp/DatabaseHelper.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AlimentosDao {
   final DatabaseHelper _dbHelper = DatabaseHelper();
