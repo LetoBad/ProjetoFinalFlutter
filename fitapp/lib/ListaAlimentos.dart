@@ -1,5 +1,6 @@
 import 'package:fitapp/Alimentos.dart';
 import 'package:fitapp/Listinha.dart';
+import 'package:fitapp/AlimentosDao.dart';
 import 'package:flutter/material.dart';
 
 class ListaAlimentos extends StatefulWidget {
@@ -19,14 +20,21 @@ class ListaAlimentos extends StatefulWidget {
 }
 
 class _ListaAlimentosState extends State<ListaAlimentos> {
-  // Controladores para nombre, calorías, proteínas, carbohidratos y grasas
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _caloriasController = TextEditingController();
   final TextEditingController _proteinasController = TextEditingController();
   final TextEditingController _carboController = TextEditingController();
   final TextEditingController _gorduraController = TextEditingController();
 
-  // Método para abrir el modal
+  final AlimentosDao _alimentosDao = AlimentosDao(); // Instância do DAO
+
+  @override
+  void initState() {
+    super.initState();
+    _alimentosDao.open(); // Abre o banco de dados
+  }
+
+  // Método para abrir o modal e adicionar alimentos
   void openModal(BuildContext scaffoldContext) {
     showModalBottomSheet(
       context: context,
@@ -62,7 +70,7 @@ class _ListaAlimentosState extends State<ListaAlimentos> {
                 ),
                 TextField(
                   decoration: const InputDecoration(
-                      label: Text("Carbohidratos por 100 Gramas")),
+                      label: Text("Carboidratos por 100 Gramas")),
                   controller: _carboController,
                   keyboardType: TextInputType.number,
                 ),
@@ -90,6 +98,7 @@ class _ListaAlimentosState extends State<ListaAlimentos> {
                         proteinas != null &&
                         carbo != null &&
                         gordura != null) {
+                      // Chama o onInsert para salvar no banco
                       widget.onInsert(Alimentos(
                           nome: nome,
                           calorias: calorias,
@@ -120,7 +129,7 @@ class _ListaAlimentosState extends State<ListaAlimentos> {
     );
   }
 
-  // Método para limpiar los controladores
+  // Método para limpar os campos
   void clearControllers() {
     _nomeController.clear();
     _caloriasController.clear();
@@ -152,13 +161,13 @@ class _ListaAlimentosState extends State<ListaAlimentos> {
             proteinas: widget.alimentos[index].proteinas,
             carbo: widget.alimentos[index].carbo,
             gordura: widget.alimentos[index].gordura,
-            onRemoved: () => widget.onRemove(index),
+            onRemoved: () => widget.onRemove(index), // Remover alimento
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openModal(context);
+          openModal(context); // Abre o modal para adicionar
         },
         backgroundColor: Colors.lightGreen,
         shape: RoundedRectangleBorder(

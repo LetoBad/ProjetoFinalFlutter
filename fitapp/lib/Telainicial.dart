@@ -13,52 +13,48 @@ class Telainicial extends StatefulWidget {
 
 class _TelainicialState extends State<Telainicial> {
   int _indexSelecionado = 0;
-
   final AlimentosDao _alimentosDao = AlimentosDao();
-  List<Alimentos> _Alimentos = [];
+  List<Alimentos> _alimentos = [];
 
   @override
   void initState() {
     super.initState();
-    _loadData(); // Cargar datos de la base de datos al iniciar
+    _loadData();
   }
 
   void _loadData() async {
-    _Alimentos = await _alimentosDao.selectAlimento();
+    await _alimentosDao.open(); // Abre o banco de dados
+    _alimentos = await _alimentosDao.selectAlimento(); // Carrega os alimentos
     setState(() {});
   }
 
   void _delAlimentos(int index) async {
-    await _alimentosDao.deleteAlimento(_Alimentos[index]);
+    await _alimentosDao.deleteAlimento(_alimentos[index]);
     setState(() {
-      _Alimentos.removeAt(index);
+      _alimentos.removeAt(index); // Remove alimento da lista
     });
   }
 
-  void _insAlimentos(Alimentos newAlimentos) async {
-    await _alimentosDao.insertAlimentos(newAlimentos);
+  void _insAlimentos(Alimentos alimento) async {
+    await _alimentosDao.insertAlimentos(alimento); // Insere alimento no banco
     setState(() {
-      _Alimentos.add(newAlimentos);
+      _alimentos.add(alimento); // Adiciona alimento à lista
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
-      Calculadora(
-        alimentos: _Alimentos,
-      ),
+      Calculadora(alimentos: _alimentos), // Tela de Cálculo
       ListaAlimentos(
-        alimentos: _Alimentos,
+        alimentos: _alimentos,
         onRemove: _delAlimentos,
         onInsert: _insAlimentos,
-      ),
+      ), // Lista de alimentos
     ];
 
     return Scaffold(
-      body: Center(
-        child: widgetOptions[_indexSelecionado],
-      ),
+      body: widgetOptions[_indexSelecionado],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
