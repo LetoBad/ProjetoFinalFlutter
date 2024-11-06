@@ -1,4 +1,3 @@
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -22,13 +21,13 @@ class DatabaseHelper {
       path,
       onCreate: (db, version) async {
         await db.execute('''
-          CREATE TABLE Alimento(
+          CREATE TABLE Alimentos(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT,
-            calorias DOUBLE,
-            proteinas DOUBLE,
-            carbo DOUBLE,
-            gordura DOUBLE
+            calorias REAL,
+            proteinas REAL,
+            carbo REAL,
+            gordura REAL
           )
         ''');
       },

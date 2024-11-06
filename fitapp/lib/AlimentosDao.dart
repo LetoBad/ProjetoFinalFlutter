@@ -25,6 +25,9 @@ class AlimentosDao {
   }
 
   Future<void> deleteAlimento(Alimentos alimentos) async {
+    if (alimentos.id == null) {
+      throw ArgumentError("El ID del alimento no puede ser nulo al eliminar.");
+    }
     final db = await _dbHelper.database;
     await db.delete(
       'Alimentos',
@@ -35,7 +38,8 @@ class AlimentosDao {
 
   Future<List<Alimentos>> selectAlimento() async {
     final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> tipoJSON = await db.query('alimentos');
+    final List<Map<String, dynamic>> tipoJSON =
+        await db.query('Alimentos'); // Cambio a 'Alimentos' para que coincida
 
     return List.generate(tipoJSON.length, (i) {
       return Alimentos.fromMap(tipoJSON[i]);

@@ -6,17 +6,22 @@ class Alimentos {
   final double carbo;
   final double gordura;
 
-  Alimentos({this.id , required this.nome, required this.calorias, required this.proteinas, required this.carbo, required this.gordura});
+  Alimentos(
+      {this.id,
+      required this.nome,
+      required this.calorias,
+      required this.proteinas,
+      required this.carbo,
+      required this.gordura});
 
   Map<String, dynamic> toMap() {
     return {
-      'id' : id,
+      'id': id,
       'nome': nome,
       'calorias': calorias,
       'proteinas': proteinas,
       'carbo': carbo,
       'gordura': gordura,
-    
     };
   }
 
@@ -25,7 +30,7 @@ class Alimentos {
       id: map['id'],
       nome: map['nome'],
       calorias: map['calorias'],
-      proteinas: map['protienas'],
+      proteinas: map['proteinas'],
       carbo: map['carbo'],
       gordura: map['gordura'],
     );

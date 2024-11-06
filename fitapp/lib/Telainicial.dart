@@ -4,18 +4,18 @@ import 'package:fitapp/Calculadora.dart';
 import 'package:fitapp/ListaAlimentos.dart';
 import 'package:flutter/material.dart';
 
-class Telainicial extends StatefulWidget {
-  const Telainicial({super.key});
+class TelaInicial extends StatefulWidget {
+  const TelaInicial({super.key});
 
   @override
-  State<Telainicial> createState() => _TelainicialState();
+  State<TelaInicial> createState() => _TelaInicialState();
 }
 
-class _TelainicialState extends State<Telainicial> {
+class _TelaInicialState extends State<TelaInicial> {
   int _indexSelecionado = 0;
 
   final AlimentosDao _alimentosDao = AlimentosDao();
-  List<Alimentos> _Alimentos = [];
+  List<Alimentos> _alimentos = [];
 
   @override
   void initState() {
@@ -23,24 +23,27 @@ class _TelainicialState extends State<Telainicial> {
     _loadData(); // Cargar datos de la base de datos
   }
 
-  void _loadData() async {
-    _Alimentos = await _alimentosDao.selectAlimento(); // Recuperar Alimentos
-    setState(() {});
-  }
-
-  void _delAlimentos(int index) async {
-    await _alimentosDao
-        .deleteAlimento(_Alimentos[index]); // Eliminar de la base de datos
+  Future<void> _loadData() async {
+    final alimentos =
+        await _alimentosDao.selectAlimento(); // Recuperar Alimentos
     setState(() {
-      _Alimentos.removeAt(index);
+      _alimentos = alimentos;
     });
   }
 
-  void _insAlimentos(Alimentos newAlimentos) async {
+  Future<void> _delAlimentos(int index) async {
+    await _alimentosDao
+        .deleteAlimento(_alimentos[index]); // Eliminar de la base de datos
+    setState(() {
+      _alimentos.removeAt(index);
+    });
+  }
+
+  Future<void> _insAlimentos(Alimentos newAlimentos) async {
     await _alimentosDao
         .insertAlimentos(newAlimentos); // Insertar en la base de datos
     setState(() {
-      _Alimentos.add(newAlimentos);
+      _alimentos.add(newAlimentos);
     });
   }
 
@@ -48,10 +51,10 @@ class _TelainicialState extends State<Telainicial> {
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
       Calculadora(
-        alimentos: _Alimentos,
+        alimentos: _alimentos,
       ),
       ListaAlimentos(
-        alimentos: _Alimentos,
+        alimentos: _alimentos,
         onRemove: _delAlimentos,
         onInsert: _insAlimentos,
       ),
@@ -71,18 +74,10 @@ class _TelainicialState extends State<Telainicial> {
             icon: Icon(Icons.food_bank),
             label: 'Alimentos',
           ),
-          /*BottomNavigationBarItem(
-            icon: Icon(Icons.pin_drop),
-            label: 'Destinos',
-          ),*/
         ],
         currentIndex: _indexSelecionado,
         selectedItemColor: Colors.lightGreen,
-        onTap: (index) {
-          setState(() {
-            _indexSelecionado = index;
-          });
-        },
+        onTap: (index) => setState(() => _indexSelecionado = index),
       ),
     );
   }
