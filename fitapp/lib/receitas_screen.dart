@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fitapp/Spoonacular_Service.dart'; // Importando o serviço da API
+import 'package:fitapp/Spoonacular_Service.dart';
 
 class ReceitasScreen extends StatefulWidget {
   @override
@@ -7,47 +7,44 @@ class ReceitasScreen extends StatefulWidget {
 }
 
 class _ReceitasScreenState extends State<ReceitasScreen> {
-  final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> _recipes = [];
+  String _resultado = '';
 
-  // Função para buscar receitas
-  void _searchRecipes() async {
-    final ingredient = _controller.text.trim();
-    if (ingredient.isEmpty) return;
-
+  // Carregar todas as receitas
+  void _carregarReceitas() async {
     try {
-      final recipes =
-          await SpoonacularService().getRecipesByIngredient(ingredient);
+      // Usando a função que busca todas as receitas
+      var receitas = await SpoonacularService().getRecipes();
       setState(() {
-        _recipes = recipes;
+        _recipes = receitas;
+        _resultado = receitas.isNotEmpty
+            ? 'Receitas carregadas!'
+            : 'Nenhuma receita encontrada!';
       });
     } catch (e) {
-      // Lidar com erro
-      print('Erro ao carregar receitas: $e'); // Log de erro
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar receitas')),
-      );
+      setState(() {
+        _resultado = 'Erro ao carregar receitas: $e';
+      });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Carregar as receitas ao iniciar a tela
+    _carregarReceitas();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buscar Receitas')),
+      appBar: AppBar(title: Text('Receitas Disponíveis')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: 'Digite um ingrediente',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: _searchRecipes,
-                ),
-              ),
-            ),
+            // Exibindo o status da carga das receitas
+            Text(_resultado),
             SizedBox(height: 16),
             Expanded(
               child: _recipes.isEmpty
@@ -65,7 +62,7 @@ class _ReceitasScreenState extends State<ReceitasScreen> {
                                   width: 50, height: 50)
                               : Icon(Icons.image),
                           onTap: () async {
-                            // Verificando os detalhes da receita
+                            // Verificar os detalhes da receita
                             try {
                               final details = await SpoonacularService()
                                   .getRecipeDetails(recipe['id']);
