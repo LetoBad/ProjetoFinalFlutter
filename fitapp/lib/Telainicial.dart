@@ -2,6 +2,7 @@ import 'package:fitapp/Alimentos.dart';
 import 'package:fitapp/AlimentosDao.dart';
 import 'package:fitapp/Calculadora.dart';
 import 'package:fitapp/ListaAlimentos.dart';
+import 'package:fitapp/TelaSpoonacular.dart'; // Importando a tela que consome a API
 import 'package:flutter/material.dart';
 
 class Telainicial extends StatefulWidget {
@@ -51,10 +52,11 @@ class _TelainicialState extends State<Telainicial> {
         onRemove: _delAlimentos,
         onInsert: _insAlimentos,
       ), // Lista de alimentos
+      TelaSpoonacular(), // Nova tela para consumir a API
     ];
 
     return Scaffold(
-      body: widgetOptions[_indexSelecionado],
+      body: widgetOptions[_indexSelecionado], // Exibe a tela selecionada
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -65,12 +67,16 @@ class _TelainicialState extends State<Telainicial> {
             icon: Icon(Icons.food_bank),
             label: 'Alimentos',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.api),
+            label: 'Receitas API',
+          ),
         ],
         currentIndex: _indexSelecionado,
         selectedItemColor: Colors.lightGreen,
         onTap: (index) {
           setState(() {
-            _indexSelecionado = index;
+            _indexSelecionado = index; // Atualiza o índice da navegação
           });
         },
       ),

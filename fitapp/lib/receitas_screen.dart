@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'spoonacular_service.dart';
+import 'package:fitapp/Spoonacular_Service.dart'; // Importando o serviço da API
 
 class ReceitasScreen extends StatefulWidget {
   @override
@@ -10,6 +10,7 @@ class _ReceitasScreenState extends State<ReceitasScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> _recipes = [];
 
+  // Função para buscar receitas
   void _searchRecipes() async {
     final ingredient = _controller.text.trim();
     if (ingredient.isEmpty) return;
@@ -22,8 +23,10 @@ class _ReceitasScreenState extends State<ReceitasScreen> {
       });
     } catch (e) {
       // Lidar com erro
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Erro ao carregar receitas')));
+      print('Erro ao carregar receitas: $e'); // Log de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar receitas')),
+      );
     }
   }
 
@@ -56,23 +59,33 @@ class _ReceitasScreenState extends State<ReceitasScreen> {
                         return ListTile(
                           title: Text(recipe['title']),
                           subtitle: Text(
-                              'Tempo de preparo: ${recipe['readyInMinutes']} min'),
+                              'Tempo de preparo: ${recipe['readyInMinutes'] ?? 'Desconhecido'} min'),
                           leading: recipe['image'] != null
                               ? Image.network(recipe['image'],
                                   width: 50, height: 50)
                               : Icon(Icons.image),
                           onTap: () async {
-                            // Aqui você pode adicionar a funcionalidade para ver os detalhes da receita
-                            final details = await SpoonacularService()
-                                .getRecipeDetails(recipe['id']);
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(details['title']),
-                                content: Text(
-                                    'Ingredientes: ${details['extendedIngredients'].toString()}'),
-                              ),
-                            );
+                            // Verificando os detalhes da receita
+                            try {
+                              final details = await SpoonacularService()
+                                  .getRecipeDetails(recipe['id']);
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(details['title']),
+                                  content: Text(
+                                    'Ingredientes: ${details['extendedIngredients'].toString()}',
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              print('Erro ao carregar detalhes: $e');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Erro ao carregar detalhes da receita')),
+                              );
+                            }
                           },
                         );
                       },
