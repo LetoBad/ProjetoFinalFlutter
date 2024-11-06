@@ -46,7 +46,19 @@ class listinha extends StatelessWidget {
                           color: Colors.lightGreen),
                     ),
                     Text(
-                      'Quilômetros rodados por Litro: $km',
+                      'Calorias: $calorias',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    Text(
+                      'Proteinas: $proteinas',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    Text(
+                      'Carbohidratos: $carbo',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    Text(
+                      'Gorduras: $gordura',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     )
                   ],

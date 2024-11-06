@@ -1,5 +1,5 @@
-
 import 'package:fitapp/Alimentos.dart';
+import 'package:fitapp/Listinha.dart';
 import 'package:flutter/material.dart';
 
 class ListaAlimentos extends StatefulWidget {
@@ -18,13 +18,12 @@ class ListaAlimentos extends StatefulWidget {
 }
 
 class _listCarsState extends State<ListaAlimentos> {
-//CONTROLADORES NOME E KM
+//CONTROLADORES NOME, calorias, proteinas, carbohidratos, gorduras
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _caloriasController = TextEditingController();
   final TextEditingController _proteinasController = TextEditingController();
   final TextEditingController _carboController = TextEditingController();
   final TextEditingController _gorduraController = TextEditingController();
-
 
   //METODO PARA ABRIR MODAL
   void openModal(BuildContext scaffoldContext) {
@@ -48,23 +47,23 @@ class _listCarsState extends State<ListaAlimentos> {
                   controller: _nomeController,
                 ),
                 TextField(
-                  decoration:
-                      const InputDecoration(label: Text("Calorias por 100 Gramas")),
+                  decoration: const InputDecoration(
+                      label: Text("Calorias por 100 Gramas")),
                   controller: _caloriasController,
                 ),
                 TextField(
-                  decoration:
-                      const InputDecoration(label: Text("Proteinas por 100 Gramas")),
+                  decoration: const InputDecoration(
+                      label: Text("Proteinas por 100 Gramas")),
                   controller: _proteinasController,
                 ),
                 TextField(
-                  decoration:
-                      const InputDecoration(label: Text("Carbohidratos por 100 Gramas")),
+                  decoration: const InputDecoration(
+                      label: Text("Carbohidratos por 100 Gramas")),
                   controller: _carboController,
                 ),
                 TextField(
-                  decoration:
-                      const InputDecoration(label: Text("Gordura por 100 Gramas")),
+                  decoration: const InputDecoration(
+                      label: Text("Gordura por 100 Gramas")),
                   controller: _gorduraController,
                 ),
                 ElevatedButton(
@@ -72,14 +71,27 @@ class _listCarsState extends State<ListaAlimentos> {
                   onPressed: () {
                     //Variaveis para receber os valores dos controllers
                     final String nome = _nomeController.text;
-                    final double? calorias = double.tryParse(_caloriasController.text);
-                    final double? proteinas = double.tryParse(_proteinasController.text);
-                    final double? carbo = double.tryParse(_carboController.text);
-                    final double? gordura = double.tryParse(_gorduraController.text);
+                    final double? calorias =
+                        double.tryParse(_caloriasController.text);
+                    final double? proteinas =
+                        double.tryParse(_proteinasController.text);
+                    final double? carbo =
+                        double.tryParse(_carboController.text);
+                    final double? gordura =
+                        double.tryParse(_gorduraController.text);
 
-                    if (nome.isNotEmpty && calorias != null && proteinas != null && carbo != null && gordura != null) {
+                    if (nome.isNotEmpty &&
+                        calorias != null &&
+                        proteinas != null &&
+                        carbo != null &&
+                        gordura != null) {
                       //Inserir Alimentos com os valores recebidos
-                      widget.onInsert(Alimentos(nome: nome, calorias: calorias, proteinas: proteinas , carbo: carbo, gordura: gordura));
+                      widget.onInsert(Alimentos(
+                          nome: nome,
+                          calorias: calorias,
+                          proteinas: proteinas,
+                          carbo: carbo,
+                          gordura: gordura));
 
                       //Limpar formulario
                       _nomeController.clear();
@@ -88,14 +100,14 @@ class _listCarsState extends State<ListaAlimentos> {
                       _carboController.clear();
                       _gorduraController.clear();
 
-
                       //Fechar modal
                       Navigator.pop(context);
 
                       // Exibir snackbar de sucesso
                       ScaffoldMessenger.of(scaffoldContext).showSnackBar(
                           const SnackBar(
-                              content: Text("Alimento adicionado com sucesso!")));
+                              content:
+                                  Text("Alimento adicionado com sucesso!")));
                     } else {
                       Navigator.pop(context);
                       //Exibir snackbar de erro
