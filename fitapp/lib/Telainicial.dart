@@ -2,7 +2,7 @@ import 'package:fitapp/Alimentos.dart';
 import 'package:fitapp/AlimentosDao.dart';
 import 'package:fitapp/Calculadora.dart';
 import 'package:fitapp/ListaAlimentos.dart';
-import 'package:fitapp/TelaSpoonacular.dart';
+import 'package:fitapp/ReceitasScreen.dart';
 import 'package:flutter/material.dart';
 
 class Telainicial extends StatefulWidget {
@@ -52,7 +52,7 @@ class _TelainicialState extends State<Telainicial> {
         onRemove: _delAlimentos,
         onInsert: _insAlimentos,
       ), // Lista de alimentos
-      TelaSpoonacular(), // tela para consumir a api
+      ReceitasScreen(), // tela para consumir a api
     ];
 
     return Scaffold(
