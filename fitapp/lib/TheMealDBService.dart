@@ -6,8 +6,7 @@ class TheMealDBService {
 
   // Obtener todas las recetas
   Future<List<Map<String, dynamic>>> getAllRecipes() async {
-    final url =
-        '$_baseUrl/search.php?s='; // Obtiene todas las recetas sin filtro
+    final url = '$_baseUrl/search.php?s=';
 
     try {
       final response = await http.get(Uri.parse(url));

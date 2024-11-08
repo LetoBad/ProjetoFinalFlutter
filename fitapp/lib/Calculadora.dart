@@ -71,7 +71,7 @@ class _CalcScreenState extends State<Calculadora> {
                   const CircleAvatar(
                     backgroundColor: Colors.lightGreen,
                     child: Icon(
-                      Icons.opacity,
+                      Icons.health_and_safety,
                       color: Colors.white,
                     ),
                   ),
