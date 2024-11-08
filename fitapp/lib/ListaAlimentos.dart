@@ -7,36 +7,38 @@ class ListaAlimentos extends StatefulWidget {
   final Function(int) onRemove;
   final Function(Alimentos) onInsert;
 
-  const ListaAlimentos(
-      {required this.alimentos,
-      required this.onRemove,
-      required this.onInsert,
-      super.key});
+  const ListaAlimentos({
+    required this.alimentos,
+    required this.onRemove,
+    required this.onInsert,
+    super.key,
+  });
 
   @override
-  State<ListaAlimentos> createState() => _listCarsState();
+  State<ListaAlimentos> createState() => _ListaAlimentosState();
 }
 
-class _listCarsState extends State<ListaAlimentos> {
-//CONTROLADORES NOME, calorias, proteinas, carbohidratos, gorduras
+class _ListaAlimentosState extends State<ListaAlimentos> {
+  // Controladores para nombre, calorías, proteínas, carbohidratos y grasas
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _caloriasController = TextEditingController();
   final TextEditingController _proteinasController = TextEditingController();
   final TextEditingController _carboController = TextEditingController();
   final TextEditingController _gorduraController = TextEditingController();
 
-  //METODO PARA ABRIR MODAL
+  // Método para abrir el modal
   void openModal(BuildContext scaffoldContext) {
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0), // Remove cantos arredondados
-          ),
-        ),
-        builder: (BuildContext context) {
-          return SizedBox(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 300,
             child: Column(
@@ -50,26 +52,29 @@ class _listCarsState extends State<ListaAlimentos> {
                   decoration: const InputDecoration(
                       label: Text("Calorias por 100 Gramas")),
                   controller: _caloriasController,
+                  keyboardType: TextInputType.number,
                 ),
                 TextField(
                   decoration: const InputDecoration(
                       label: Text("Proteinas por 100 Gramas")),
                   controller: _proteinasController,
+                  keyboardType: TextInputType.number,
                 ),
                 TextField(
                   decoration: const InputDecoration(
                       label: Text("Carbohidratos por 100 Gramas")),
                   controller: _carboController,
+                  keyboardType: TextInputType.number,
                 ),
                 TextField(
                   decoration: const InputDecoration(
                       label: Text("Gordura por 100 Gramas")),
                   controller: _gorduraController,
+                  keyboardType: TextInputType.number,
                 ),
                 ElevatedButton(
                   child: const Text("Salvar"),
                   onPressed: () {
-                    //Variaveis para receber os valores dos controllers
                     final String nome = _nomeController.text;
                     final double? calorias =
                         double.tryParse(_caloriasController.text);
@@ -85,7 +90,6 @@ class _listCarsState extends State<ListaAlimentos> {
                         proteinas != null &&
                         carbo != null &&
                         gordura != null) {
-                      //Inserir Alimentos com os valores recebidos
                       widget.onInsert(Alimentos(
                           nome: nome,
                           calorias: calorias,
@@ -93,24 +97,14 @@ class _listCarsState extends State<ListaAlimentos> {
                           carbo: carbo,
                           gordura: gordura));
 
-                      //Limpar formulario
-                      _nomeController.clear();
-                      _caloriasController.clear();
-                      _proteinasController.clear();
-                      _carboController.clear();
-                      _gorduraController.clear();
-
-                      //Fechar modal
+                      clearControllers();
                       Navigator.pop(context);
-
-                      // Exibir snackbar de sucesso
                       ScaffoldMessenger.of(scaffoldContext).showSnackBar(
                           const SnackBar(
                               content:
                                   Text("Alimento adicionado com sucesso!")));
                     } else {
                       Navigator.pop(context);
-                      //Exibir snackbar de erro
                       ScaffoldMessenger.of(scaffoldContext).showSnackBar(
                           const SnackBar(
                               content:
@@ -120,27 +114,39 @@ class _listCarsState extends State<ListaAlimentos> {
                 ),
               ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
+  }
+
+  // Método para limpiar los controladores
+  void clearControllers() {
+    _nomeController.clear();
+    _caloriasController.clear();
+    _proteinasController.clear();
+    _carboController.clear();
+    _gorduraController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            "Lista de Alimentos",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.lightGreen,
-              fontWeight: FontWeight.bold,
-            ),
+        title: const Text(
+          "Lista de Alimentos",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.lightGreen,
+            fontWeight: FontWeight.bold,
           ),
-          centerTitle: true),
+        ),
+        centerTitle: true,
+      ),
       body: ListView.builder(
         itemCount: widget.alimentos.length,
         itemBuilder: (context, index) {
-          return listinha(
+          return Listinha(
             nome: widget.alimentos[index].nome,
             calorias: widget.alimentos[index].calorias,
             proteinas: widget.alimentos[index].proteinas,

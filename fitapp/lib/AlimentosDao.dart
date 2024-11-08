@@ -1,44 +1,47 @@
-import 'package:fitapp/Alimentos.dart';
-import 'package:fitapp/DatabaseHelper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'Alimentos.dart';
 
 class AlimentosDao {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
+  // Método para obtener o inicializar la base de datos
+  Future<Database> getDatabase() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'fitapp.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE alimentos(nome TEXT PRIMARY KEY, calorias REAL, proteinas REAL, carbo REAL, gordura REAL)',
+        );
+      },
+      version: 1,
+    );
+  }
 
-  Future<void> insertAlimentos(Alimentos alimentos) async {
-    final db = await _dbHelper.database;
+  // Método para insertar un alimento en la base de datos
+  Future<void> insertAlimentos(Alimentos alimento) async {
+    final db = await getDatabase();
     await db.insert(
-      'Alimentos',
-      alimentos.toMap(),
+      'alimentos',
+      alimento.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<void> updateAlimentos(Alimentos alimentos) async {
-    final db = await _dbHelper.database;
-    await db.update(
-      'Alimentos',
-      alimentos.toMap(),
-      where: 'id = ?',
-      whereArgs: [alimentos.id],
-    );
-  }
-
-  Future<void> deleteAlimento(Alimentos alimentos) async {
-    final db = await _dbHelper.database;
-    await db.delete(
-      'Alimentos',
-      where: 'id = ?',
-      whereArgs: [alimentos.id],
-    );
-  }
-
+  // Método para obtener todos los alimentos
   Future<List<Alimentos>> selectAlimento() async {
-    final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> tipoJSON = await db.query('alimentos');
-
-    return List.generate(tipoJSON.length, (i) {
-      return Alimentos.fromMap(tipoJSON[i]);
+    final db = await getDatabase();
+    final List<Map<String, dynamic>> maps = await db.query('alimentos');
+    return List.generate(maps.length, (i) {
+      return Alimentos.fromMap(maps[i]);
     });
+  }
+
+  // Método para eliminar un alimento específico
+  Future<void> deleteAlimento(Alimentos alimento) async {
+    final db = await getDatabase();
+    await db.delete(
+      'alimentos',
+      where: 'nome = ?',
+      whereArgs: [alimento.nome],
+    );
   }
 }

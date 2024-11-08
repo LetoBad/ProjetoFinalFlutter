@@ -29,98 +29,19 @@ class _CalcScreenState extends State<Calculadora> {
     _ingeridoController.text = _gramosing.toString();
   }
 
-  void openModal(BuildContext scaffoldContext) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0),
-          ),
-        ),
-        builder: (BuildContext context) {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 40),
-                      const Text("Defina os gramos ingeridos"),
-                      const SizedBox(height: 40),
-                      // gramos ingeridos
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Gramos (Gr\$)"),
-                          const SizedBox(width: 35),
-                          SizedBox(
-                            width: 100,
-                            height: 80,
-                            child: TextField(
-                              style: const TextStyle(fontSize: 35),
-                              controller: _ingeridoController,
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const SizedBox(height: 150),
-                      SizedBox(
-                        width: 300,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.lightGreen,
-                            minimumSize: const Size(200, 50),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _gramosing =
-                                  double.parse(_ingeridoController.text);
-                            });
-                            Navigator.pop(context); // Fechar modal
-                          },
-                          child: const Text("Confirmar",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  //METODO PARA CALCULAR
+  // METODO PARA CALCULAR
   void calcularCusto() {
     if (_alimentoSelecionado != null) {
       Alimentos alimentos = widget.alimentos
           .firstWhere((ali) => ali.nome == _alimentoSelecionado);
 
-      //Calcular o valor nutricional por gramo
+      // Calcular o valor nutricional por gramo
       double quantcal = alimentos.calorias / 100;
       double quantpro = alimentos.proteinas / 100;
       double quantcar = alimentos.carbo / 100;
       double quantgor = alimentos.gordura / 100;
 
-      //Calcula o total dos valores por as gramas ingeridas
+      // Calcula o total dos valores por as gramas ingeridas
       setState(() {
         _caltotal = quantcal * _gramosing;
         _prototal = quantpro * _gramosing;
@@ -159,7 +80,7 @@ class _CalcScreenState extends State<Calculadora> {
                     children: [
                       const Text("Ingerido"),
                       // valor atualizado do ingerido
-                      Text(_gramosing.toString()),
+                      Text(_gramosing.toString() + " g"),
                     ],
                   ),
                 ],
@@ -175,7 +96,7 @@ class _CalcScreenState extends State<Calculadora> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const Text(
-                "Selecione um Aliemto e defina a quantidade ingerida.",
+                "Selecione um Alimento e defina a quantidade ingerida.",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 10,
@@ -201,50 +122,109 @@ class _CalcScreenState extends State<Calculadora> {
                   },
                 ),
               ),
+              const SizedBox(height: 20),
+              // Campo para definir a quantidade ingerida
+              _alimentoSelecionado != null
+                  ? Column(
+                      children: [
+                        const Text("Defina a quantidade ingerida (gramas):"),
+                        SizedBox(
+                          width: 150,
+                          child: TextField(
+                            controller: _ingeridoController,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              setState(() {
+                                _gramosing = double.tryParse(value) ?? 100;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              hintText: "Gramas",
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
           const SizedBox(height: 20),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20, left: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Valores Total:",
-                        style: TextStyle(
-                          color: Colors.lightGreen,
-                          fontWeight: FontWeight.bold,
+          // Exibição dos valores totais de calorias, proteínas, carboidratos e gorduras
+          _alimentoSelecionado != null
+              ? Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Valores Totais:",
+                      style: TextStyle(
+                        color: Colors.lightGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Calorias: ",
+                            style: TextStyle(color: Colors.grey)),
+                        Text(
+                          "${_caltotal.toStringAsFixed(2)} kcal",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Gramos ingeridos:",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        "BRL${_gramosing.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Proteínas: ",
+                            style: TextStyle(color: Colors.grey)),
+                        Text(
+                          "${_prototal.toStringAsFixed(2)} g",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Carboidratos: ",
+                            style: TextStyle(color: Colors.grey)),
+                        Text(
+                          "${_carbtotal.toStringAsFixed(2)} g",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Gorduras: ",
+                            style: TextStyle(color: Colors.grey)),
+                        Text(
+                          "${_gortotal.toStringAsFixed(2)} g",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Container(),
           const SizedBox(height: 50),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -261,36 +241,6 @@ class _CalcScreenState extends State<Calculadora> {
               "Calcular",
               style: TextStyle(
                 color: Colors.white,
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 50, left: 0),
-            width: 140,
-            height: 35,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                side: const BorderSide(color: Colors.lightGreen, width: 1.0),
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              ),
-              onPressed: () {
-                openModal(context);
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.settings,
-                    color: Colors.lightGreen,
-                    size: 12,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    "Alterar Ingerido",
-                    style: TextStyle(fontSize: 12, color: Colors.lightGreen),
-                  )
-                ],
               ),
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class listinha extends StatelessWidget {
+class Listinha extends StatelessWidget {
   final String nome;
   final double calorias;
   final double proteinas;
@@ -8,14 +8,15 @@ class listinha extends StatelessWidget {
   final double gordura;
   final Function() onRemoved;
 
-  const listinha(
-      {required this.nome,
-      required this.calorias,
-      required this.proteinas,
-      required this.carbo,
-      required this.gordura,
-      required this.onRemoved,
-      super.key});
+  const Listinha({
+    required this.nome,
+    required this.calorias,
+    required this.proteinas,
+    required this.carbo,
+    required this.gordura,
+    required this.onRemoved,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class listinha extends StatelessWidget {
               const CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(
-                  Icons.directions_car_outlined,
+                  Icons.fastfood,
                   color: Colors.lightGreen,
                 ),
               ),
@@ -41,33 +42,32 @@ class listinha extends StatelessWidget {
                     Text(
                       nome,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.lightGreen),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.lightGreen,
+                      ),
                     ),
                     Text(
-                      'Calorias: $calorias',
+                      'Calorias: ${calorias.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     Text(
-                      'Proteinas: $proteinas',
+                      'Proteínas: ${proteinas.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     Text(
-                      'Carbohidratos: $carbo',
+                      'Carbohidratos: ${carbo.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     Text(
-                      'Gorduras: $gordura',
+                      'Gorduras: ${gordura.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    )
+                    ),
                   ],
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  onRemoved();
-                },
+                onPressed: onRemoved,
                 icon: const Icon(
                   Icons.delete,
                   color: Colors.grey,
@@ -79,7 +79,7 @@ class listinha extends StatelessWidget {
           const Divider(
             thickness: 1,
             color: Color.fromARGB(255, 211, 211, 211),
-          )
+          ),
         ],
       ),
     );

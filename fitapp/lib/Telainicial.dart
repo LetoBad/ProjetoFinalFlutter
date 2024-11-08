@@ -20,25 +20,23 @@ class _TelainicialState extends State<Telainicial> {
   @override
   void initState() {
     super.initState();
-    _loadData(); // Cargar datos de la base de datos
+    _loadData(); // Cargar datos de la base de datos al iniciar
   }
 
   void _loadData() async {
-    _Alimentos = await _alimentosDao.selectAlimento(); // Recuperar Alimentos
+    _Alimentos = await _alimentosDao.selectAlimento();
     setState(() {});
   }
 
   void _delAlimentos(int index) async {
-    await _alimentosDao
-        .deleteAlimento(_Alimentos[index]); // Eliminar de la base de datos
+    await _alimentosDao.deleteAlimento(_Alimentos[index]);
     setState(() {
       _Alimentos.removeAt(index);
     });
   }
 
   void _insAlimentos(Alimentos newAlimentos) async {
-    await _alimentosDao
-        .insertAlimentos(newAlimentos); // Insertar en la base de datos
+    await _alimentosDao.insertAlimentos(newAlimentos);
     setState(() {
       _Alimentos.add(newAlimentos);
     });
@@ -71,10 +69,6 @@ class _TelainicialState extends State<Telainicial> {
             icon: Icon(Icons.food_bank),
             label: 'Alimentos',
           ),
-          /*BottomNavigationBarItem(
-            icon: Icon(Icons.pin_drop),
-            label: 'Destinos',
-          ),*/
         ],
         currentIndex: _indexSelecionado,
         selectedItemColor: Colors.lightGreen,
