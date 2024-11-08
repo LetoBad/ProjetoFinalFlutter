@@ -13,7 +13,6 @@ class Alimentos {
     required this.gordura,
   });
 
-  // Convertir Alimentos a Map para inserción en la base de datos
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
@@ -24,7 +23,6 @@ class Alimentos {
     };
   }
 
-  // Convertir Map a Alimentos al recuperar de la base de datos
   factory Alimentos.fromMap(Map<String, dynamic> map) {
     return Alimentos(
       nome: map['nome'],
